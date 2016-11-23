@@ -13,7 +13,6 @@ class Music: NSObject {
     public var name :String!
     public var duration : CLong!
     public var format : String!
-    public var data : String!
     public var artist : String!
     public var album : String!
     public var annee : String!

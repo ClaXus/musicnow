@@ -16,36 +16,46 @@ class ViewController: UIViewController {
     @IBOutlet weak var durationLabel: UILabel!
     
     
-    @IBOutlet weak var playButton: UIButton!
-    
-    
     private var player : AVAudioPlayer?
 
     private var musicData : Music?
-    
+    var mplayer = AVPlayer()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        playButton.isEnabled = false;
-        // Do any additional setup after loading the view, typically from a nib.
-        
-       musicData = getMusic(name: "sound.mp3");
+
         
         
         
+        //pour recuperer toutes les musics
         //http://10.1.3.59:9000/mamusic/api/getAll
         
         
         
     }
     
+    @IBAction func onStreamClick(_ sender: AnyObject) {
+        
+      
+        streamMusic(name: "sound4.mp3")
+        print("clicked");
+    }
     
-    func getMusic(name : String) -> Music{
+
+    
+    
+    @IBAction func onGetInfoClick(_ sender: AnyObject) {
+        getMusicInfo(name : "sound4.mp3")
+    }
+    
+    
+    func getMusicInfo(name : String) -> Music{
         
         
         let music = Music();
  
         
-        URLSession.shared.dataTask(with: NSURL(string: "http://10.1.3.59:9000/mamusic/api/getmusic?name=sound2.mp3")! as URL, completionHandler: { (data, response, error) -> Void in
+        URLSession.shared.dataTask(with: NSURL(string: AppDelegate.endPoint+"/mamusic/api/getmusic?name="+name)! as URL, completionHandler: { (data, response, error) -> Void in
 
             if error == nil && data != nil {
                 
@@ -58,7 +68,6 @@ class ViewController: UIViewController {
                         
                         let jsonArray = try JSONSerialization.jsonObject(with: data!, options:[]) as! [String:AnyObject]
                         
-                        music.data =  jsonArray["data"] as! String;
                         music.name = jsonArray["name"] as? String;
                         music.album = jsonArray["album"] as? String;
                         music.artist = jsonArray["artist"] as? String
@@ -67,11 +76,8 @@ class ViewController: UIViewController {
                         
                         self.nameLabel.text = jsonArray["name"] as? String
                         self.durationLabel.text = (jsonArray["duration"] as? Int)?.description
-                        
+                        self.durationLabel.text = self.durationLabel.text! + " sec";
                    
-                        
-                        self.playButton.isEnabled = true;
-
                         
                     } catch {
                         print("Error: \(error)")
@@ -88,36 +94,27 @@ class ViewController: UIViewController {
         
     }
     
+    func streamMusic(name : String)  {
+        
+        
+        let url = AppDelegate.endPoint+"/mamusic/api/dlMusic?name="+name
+        
+        let playerItem = AVPlayerItem( url:NSURL( string:url ) as! URL )
+        print(playerItem.duration.seconds.description);
+        mplayer = AVPlayer(playerItem:playerItem)
+        mplayer.rate = 1.0;
+        mplayer.volume = 1.0;
+        
+        mplayer.play()
+        
+
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func onPlayClick(_ sender: AnyObject) {
-        
-        
-        playMusic(music: musicData!)
-        
-        
-    }
-    
-    func playMusic (music : Music){
-        
-        let audioData: NSData! = NSData(base64Encoded: music.data , options: NSData.Base64DecodingOptions(rawValue:0))
-        
-        if audioData != nil
-        {
-            if let sound = try? AVAudioPlayer(data: audioData as Data){
-                sound.play()
-                self.player = sound;
-            }
-        }
-        else
-        {
-            print("Data Not Exist")
-        }
 
-    }
     
 }
 

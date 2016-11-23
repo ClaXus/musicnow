@@ -211,6 +211,7 @@
 				TargetAttributes = {
 					820BB6281DDCAA7D00A7B42A = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = QQ87K23M9N;
 						ProvisioningStyle = Automatic;
 					};
 					820BB63C1DDCAA7D00A7B42A = {
@@ -432,6 +433,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = QQ87K23M9N;
 				INFOPLIST_FILE = MusicNow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = apple.MusicNow;
@@ -444,6 +446,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = QQ87K23M9N;
 				INFOPLIST_FILE = MusicNow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = apple.MusicNow;

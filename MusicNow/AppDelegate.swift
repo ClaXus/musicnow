@@ -11,6 +11,10 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    //local host : http://10.1.3.59:9000
+    //server : http://51.255.34.85:9000
+    
+    static var endPoint = "http://51.255.34.85:9000"
     var window: UIWindow?
 
 
