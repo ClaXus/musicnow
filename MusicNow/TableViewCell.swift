@@ -10,15 +10,17 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+
+    @IBAction func onClick(_ sender: AnyObject) {
+        didPlayTapped!();
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
+    
+    var didPlayTapped: (() -> Void)?
+    
+    @IBOutlet weak var playButton: UIButton!
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    var isPlaying  = false;
     
 }

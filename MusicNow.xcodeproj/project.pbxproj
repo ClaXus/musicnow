@@ -17,6 +17,10 @@
 		820BB65D1DDDC30700A7B42A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 820BB65C1DDDC30700A7B42A /* AVFoundation.framework */; };
 		820BB65F1DDDC45500A7B42A /* sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 820BB65E1DDDC45500A7B42A /* sound.mp3 */; };
 		820BB6611DDDEC7400A7B42A /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820BB6601DDDEC7400A7B42A /* Music.swift */; };
+		8F4C5DC21DE99ECC002BA844 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4C5DC11DE99ECC002BA844 /* TableViewController.swift */; };
+		8F4C5DC51DE99FA8002BA844 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4C5DC31DE99FA8002BA844 /* TableViewCell.swift */; };
+		8F4C5DC61DE99FA8002BA844 /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F4C5DC41DE99FA8002BA844 /* TableViewCell.xib */; };
+		8F4C5DC81DE9B1BF002BA844 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4C5DC71DE9B1BF002BA844 /* MainController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +57,10 @@
 		820BB65C1DDDC30700A7B42A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		820BB65E1DDDC45500A7B42A /* sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sound.mp3; sourceTree = "<group>"; };
 		820BB6601DDDEC7400A7B42A /* Music.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
+		8F4C5DC11DE99ECC002BA844 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		8F4C5DC31DE99FA8002BA844 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		8F4C5DC41DE99FA8002BA844 /* TableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewCell.xib; sourceTree = "<group>"; };
+		8F4C5DC71DE9B1BF002BA844 /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,12 +115,16 @@
 			children = (
 				820BB62C1DDCAA7D00A7B42A /* AppDelegate.swift */,
 				820BB62E1DDCAA7D00A7B42A /* ViewController.swift */,
-				820BB6301DDCAA7D00A7B42A /* Main.storyboard */,
+				8F4C5DC71DE9B1BF002BA844 /* MainController.swift */,
+				8F4C5DC11DE99ECC002BA844 /* TableViewController.swift */,
+				820BB6601DDDEC7400A7B42A /* Music.swift */,
+				8F4C5DC31DE99FA8002BA844 /* TableViewCell.swift */,
 				820BB6331DDCAA7D00A7B42A /* Assets.xcassets */,
 				820BB65E1DDDC45500A7B42A /* sound.mp3 */,
+				820BB6301DDCAA7D00A7B42A /* Main.storyboard */,
 				820BB6351DDCAA7D00A7B42A /* LaunchScreen.storyboard */,
+				8F4C5DC41DE99FA8002BA844 /* TableViewCell.xib */,
 				820BB6381DDCAA7D00A7B42A /* Info.plist */,
-				820BB6601DDDEC7400A7B42A /* Music.swift */,
 			);
 			path = MusicNow;
 			sourceTree = "<group>";
@@ -252,6 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				820BB65F1DDDC45500A7B42A /* sound.mp3 in Resources */,
+				8F4C5DC61DE99FA8002BA844 /* TableViewCell.xib in Resources */,
 				820BB6371DDCAA7D00A7B42A /* LaunchScreen.storyboard in Resources */,
 				820BB6341DDCAA7D00A7B42A /* Assets.xcassets in Resources */,
 				820BB6321DDCAA7D00A7B42A /* Main.storyboard in Resources */,
@@ -279,9 +292,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F4C5DC51DE99FA8002BA844 /* TableViewCell.swift in Sources */,
 				820BB62F1DDCAA7D00A7B42A /* ViewController.swift in Sources */,
 				820BB62D1DDCAA7D00A7B42A /* AppDelegate.swift in Sources */,
 				820BB6611DDDEC7400A7B42A /* Music.swift in Sources */,
+				8F4C5DC81DE9B1BF002BA844 /* MainController.swift in Sources */,
+				8F4C5DC21DE99ECC002BA844 /* TableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
