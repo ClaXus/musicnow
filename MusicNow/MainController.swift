@@ -23,14 +23,17 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
     
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var playButton: UIButton!
-    
+    var currentTableViewCell: TableViewCell!
     var mplayer = AVPlayer();
     
     var arrayOfMusics = [Music]();
-    var isPlaying = 0;
-    var correntPlayingItem = 0;
+    var isPlaying = false;
+    var correntPlayingItem = -1;
+    
+    
     
     override func viewDidLoad() {
+        
         let music = Music();
         music.name = "sound.mp3";
         
@@ -43,8 +46,18 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         arrayOfMusics = getMusicInfo();
         
         
+       
+       
+        
     }
     
+    
+    func updateSlider (){
+        
+        print("setting ");
+        musicSlider.value = Float(mplayer.currentTime().seconds);
+        
+    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,21 +65,52 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         return arrayOfMusics.count;
     }
     
+    
+    @IBAction func onSliderChange(_ sender: AnyObject) {
+        mplayer.seek(to: CMTimeMake(Int64(musicSlider.value), 1))
+        print(mplayer.currentTime().value);
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = Bundle.main.loadNibNamed("TableViewCell", owner: self, options: nil)?.first as! TableViewCell;
         cell.titleLabel.text =  arrayOfMusics[indexPath.row].name;
         cell.playButton.tag = indexPath.row
         
         
         cell.didPlayTapped = {[weak self] in
-            self?.streamMusic(music: (self?.arrayOfMusics[indexPath.row])!);
+         
+            if((self?.currentTableViewCell) != nil){
+                self?.currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+                self?.currentTableViewCell.isPlaying = cell.isPlaying;
+                
+                
+            }
             
+            
+            if(!cell.isPlaying){
+                self?.streamMusic(music: (self?.arrayOfMusics[indexPath.row])!);
+                cell.isPlaying = true;
+                cell.playButton.setImage(UIImage(named: "stop-circle.png"), for: UIControlState.normal)
+            }else{
+                cell.isPlaying = false;
+                self?.mplayer.seek(to: CMTimeMake(0, 1))
+                self?.mplayer.pause();
+                self?.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+                cell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+            }
+            
+        
+            self?.currentTableViewCell = cell;
+
+            
+         
         }
         
         return cell;
     }
     
-
+    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         streamMusic(music: arrayOfMusics[indexPath.row]);
@@ -124,66 +168,72 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
                 }
             }
             
-                
-                
-                
-                
-                
-            }).resume()
-            
-            return musicList;
-            
+        }).resume()
+        
+        return musicList;
+        
+    }
+    
+    var timerRuned = false
+    func streamMusic(music : Music)  {
+        
+        
+        let url = AppDelegate.endPoint+"/mamusic/api/dlMusic?name="+music.name
+        
+        let playerItem = AVPlayerItem( url:NSURL( string:url ) as! URL )
+        mplayer = AVPlayer(playerItem:playerItem)
+        mplayer.rate = 1.0;
+        mplayer.volume = 1.0;
+        isPlaying = true;
+        
+        musicSlider.value = Float(mplayer.currentTime().value);
+        musicSlider.minimumValue = 0;
+
+        musicSlider.maximumValue = Float(music.duration);
+        
+        playButton.setImage(UIImage(named: "pause-circle.png"), for: UIControlState.normal)
+        
+        nameLable.text = music.name.replacingOccurrences(of: ".mp3", with: "");
+        artistLable.text = music.artist;
+        
+        
+        mplayer.play()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: mplayer.currentItem)
+        
+        if(!timerRuned){
+         let timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,selector: #selector(MainController.updateSlider), userInfo: nil, repeats: true);
+            timerRuned = true;
         }
         
         
-        func streamMusic(music : Music)  {
-            
-            
-            let url = AppDelegate.endPoint+"/mamusic/api/dlMusic?name="+music.name
-            
-            let playerItem = AVPlayerItem( url:NSURL( string:url ) as! URL )
-            print(playerItem.duration.seconds.description);
-            mplayer = AVPlayer(playerItem:playerItem)
-            mplayer.rate = 1.0;
-            mplayer.volume = 1.0;
-            isPlaying = 1;
-            
-            playButton.setTitle("Pause", for: .normal)
-            nameLable.text = music.name.replacingOccurrences(of: ".mp3", with: "");
-            artistLable.text = music.artist;
-            
-            
-            mplayer.play()
-            
-            NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: mplayer.currentItem)
-            
-            
-            
-            
-        }
+    }
+    
+    func playerDidFinishPlaying(note: NSNotification){
+        playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+        isPlaying = false;
+        currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+        currentTableViewCell.isPlaying = false;
         
-        func playerDidFinishPlaying(note: NSNotification){
-            playButton.setTitle("Play", for: .normal)
-            isPlaying = 0;
-            
-            
-        }
+        mplayer.seek(to: CMTimeMake(0, 1))
         
-        @IBAction func onPlayOrPauseClick(_ sender: AnyObject) {
-            if(mplayer != nil){
-                if(isPlaying == 1){
-                    mplayer.pause();
-                    isPlaying = 0;
-                    playButton.setTitle("Play", for: .normal)
-                }else{
-                    mplayer.play();
-                    isPlaying = 1;
-                    playButton.setTitle("Pause", for: .normal)
-                }
+    }
+    
+    @IBAction func onPlayOrPauseClick(_ sender: AnyObject) {
+        if(mplayer != nil){
+            if(isPlaying == true){
+                mplayer.pause();
+                isPlaying = false;
+                playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+            }else{
+                mplayer.play();
+                isPlaying = true;
+                playButton.setImage(UIImage(named: "pause-circle.png"), for: UIControlState.normal)
             }
-            
         }
         
-        
-        
+    }
+    
+    
+    
 }
