@@ -148,7 +148,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRl-Gz-Rgw">
                                 <frame key="frameInset" minX="12" minY="506" width="347" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -167,8 +167,16 @@
                                     <action selector="onPrevClick:" destination="Ejp-PT-WAW" eventType="touchUpInside" id="ebR-le-D3I"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="27P-vm-aFs">
+                                <frame key="frameInset" minX="322" minY="618" width="27" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="shuffle-variant-2"/>
+                                <connections>
+                                    <action selector="onShuffleClick:" destination="Ejp-PT-WAW" eventType="touchUpInside" id="TUS-tG-hd4"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
                     <connections>
                         <outlet property="artistLable" destination="WJR-CK-al9" id="tmc-L3-rKV"/>
@@ -178,6 +186,7 @@
                         <outlet property="nextButton" destination="XFW-o0-byb" id="xeU-mS-pby"/>
                         <outlet property="playButton" destination="xoe-Td-zNg" id="7oo-jy-AgU"/>
                         <outlet property="prevButton" destination="OhK-zK-15A" id="ugT-od-LWq"/>
+                        <outlet property="shufflButton" destination="27P-vm-aFs" id="eE4-z4-4j5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FF8-tz-GHv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -187,6 +196,7 @@
     </scenes>
     <resources>
         <image name="play-circle" width="128" height="128"/>
+        <image name="shuffle-variant-2" width="128" height="128"/>
         <image name="skip-next-circle" width="128" height="128"/>
         <image name="skip-previous-circle" width="128" height="128"/>
     </resources>

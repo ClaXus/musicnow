@@ -11,10 +11,11 @@ import UIKit
 import AVFoundation
 
 
-class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSource {
- 
-
+class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSource,UINavigationControllerDelegate {
     
+    
+    
+    @IBOutlet weak var shufflButton: UIButton!
     
     @IBOutlet weak var prevButton: UIButton!
     @IBOutlet weak var musicSlider: UISlider!
@@ -31,7 +32,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
     var arrayOfMusics = [Music]();
     var isPlaying = false;
     var correntPlayingItem = -1;
-    
+    var shuffle = false;
     
     override func viewDidLoad() {
         
@@ -46,9 +47,11 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
         arrayOfMusics = getMusicInfo();
         
+        nameLable.text = "";
+        artistLable.text = "";
         
-       
-       
+    
+        
         
     }
     
@@ -80,7 +83,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
         
         cell.didPlayTapped = {[weak self] in
-         
+            
             self?.correntPlayingItem = indexPath.row;
             if((self?.currentTableViewCell) != nil){
                 self?.currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
@@ -102,11 +105,11 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
                 cell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
             }
             
-        
-            self?.currentTableViewCell = cell;
-
             
-         
+            self?.currentTableViewCell = cell;
+            
+            
+            
         }
         
         return cell;
@@ -160,6 +163,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
                         }
                         self.arrayOfMusics = musicList;
                         
+                        
                         DispatchQueue.main.async{
                             self.musicTableView.reloadData()
                         }
@@ -190,7 +194,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
         musicSlider.value = Float(mplayer.currentTime().value);
         musicSlider.minimumValue = 0;
-
+        
         musicSlider.maximumValue = Float(music.duration);
         
         playButton.setImage(UIImage(named: "pause-circle.png"), for: UIControlState.normal)
@@ -204,7 +208,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: mplayer.currentItem)
         
         if(!timerRuned){
-         let timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,selector: #selector(MainController.updateSlider), userInfo: nil, repeats: true);
+            let timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,selector: #selector(MainController.updateSlider), userInfo: nil, repeats: true);
             timerRuned = true;
         }
         
@@ -219,6 +223,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
         mplayer.seek(to: CMTimeMake(0, 1))
         
+        playNext(random: shuffle);
     }
     
     @IBAction func onPlayOrPauseClick(_ sender: AnyObject) {
@@ -239,12 +244,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
     
     @IBAction func onNextClick(_ sender: AnyObject) {
         
-        var next = correntPlayingItem + 1;
-        if(next == arrayOfMusics.count){
-            next = 0;
-        }
-        streamMusic(music : arrayOfMusics[next])
-        correntPlayingItem = next;
+        playNext(random: shuffle);
         
     }
     @IBAction func onPrevClick(_ sender: AnyObject) {
@@ -258,5 +258,40 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
     }
     
+    func playNext (random : Bool) {
+        
+        var next = correntPlayingItem;
+        let size = arrayOfMusics.count;
+        if(!random){
+            next = correntPlayingItem + 1;
+            if(next == arrayOfMusics.count){
+                next = 0;
+            }
+        }else{
+            while(correntPlayingItem == next){
+                next = Int(arc4random_uniform(UInt32(size)-1))
+            }
+        }
+        
+        streamMusic(music : arrayOfMusics[next])
+        correntPlayingItem = next;
+        
+        
+    }
+    
+    @IBAction func onShuffleClick(_ sender: AnyObject) {
+        
+        shuffle = !shuffle;
+        
+        if(shuffle){
+            shufflButton.setImage(UIImage(named: "shuffle-variant.png"), for: UIControlState.normal);
+        }else{
+            shufflButton.setImage(UIImage(named: "shuffle-variant-2.png"), for: UIControlState.normal);
+        }
+        
+        
+    }
+    
+  
     
 }
