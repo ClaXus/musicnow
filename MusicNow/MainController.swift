@@ -12,6 +12,8 @@ import AVFoundation
 
 
 class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSource {
+ 
+
     
     
     @IBOutlet weak var prevButton: UIButton!
@@ -29,7 +31,6 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
     var arrayOfMusics = [Music]();
     var isPlaying = false;
     var correntPlayingItem = -1;
-    
     
     
     override func viewDidLoad() {
@@ -80,6 +81,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
         cell.didPlayTapped = {[weak self] in
          
+            self?.correntPlayingItem = indexPath.row;
             if((self?.currentTableViewCell) != nil){
                 self?.currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
                 self?.currentTableViewCell.isPlaying = cell.isPlaying;
@@ -234,6 +236,27 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
     }
     
+    
+    @IBAction func onNextClick(_ sender: AnyObject) {
+        
+        var next = correntPlayingItem + 1;
+        if(next == arrayOfMusics.count){
+            next = 0;
+        }
+        streamMusic(music : arrayOfMusics[next])
+        correntPlayingItem = next;
+        
+    }
+    @IBAction func onPrevClick(_ sender: AnyObject) {
+        
+        var prev = correntPlayingItem - 1;
+        if(prev == -1){
+            prev = arrayOfMusics.count-1;
+        }
+        streamMusic(music : arrayOfMusics[prev])
+        correntPlayingItem = prev;
+        
+    }
     
     
 }
