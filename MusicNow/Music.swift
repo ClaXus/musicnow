@@ -16,7 +16,7 @@ class Music: NSObject {
     public var artist : String!
     public var album : String!
     public var annee : String!
-
+    public var isSelected : Bool = false;
     
     override init() {
         

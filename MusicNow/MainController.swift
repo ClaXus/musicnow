@@ -50,7 +50,8 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         nameLable.text = "";
         artistLable.text = "";
         
-    
+        
+        
         
         
     }
@@ -58,7 +59,6 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
     
     func updateSlider (){
         
-        print("setting ");
         musicSlider.value = Float(mplayer.currentTime().seconds);
         
     }
@@ -80,8 +80,18 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         let cell = Bundle.main.loadNibNamed("TableViewCell", owner: self, options: nil)?.first as! TableViewCell;
         cell.titleLabel.text =  arrayOfMusics[indexPath.row].name;
         cell.playButton.tag = indexPath.row
+        cell.artistLabel.text = arrayOfMusics[indexPath.row].artist;
+        cell.isPlaying = arrayOfMusics[indexPath.row].isSelected;
+        
+       
         
         
+        if(cell.isPlaying){
+            cell.playButton.setImage(UIImage(named: "stop-circle.png"), for: UIControlState.normal)
+        }else{
+            cell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+        }
+ 
         cell.didPlayTapped = {[weak self] in
             
             self?.correntPlayingItem = indexPath.row;
@@ -89,6 +99,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
                 self?.currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
                 self?.currentTableViewCell.isPlaying = cell.isPlaying;
                 
+                self?.currentTableViewCell.setSelected(false, animated: true);
                 
             }
             
@@ -96,9 +107,12 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
             if(!cell.isPlaying){
                 self?.streamMusic(music: (self?.arrayOfMusics[indexPath.row])!);
                 cell.isPlaying = true;
+                self?.arrayOfMusics[indexPath.row].isSelected = true;
                 cell.playButton.setImage(UIImage(named: "stop-circle.png"), for: UIControlState.normal)
             }else{
                 cell.isPlaying = false;
+                self?.arrayOfMusics[indexPath.row].isSelected = false;
+
                 self?.mplayer.seek(to: CMTimeMake(0, 1))
                 self?.mplayer.pause();
                 self?.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
@@ -107,7 +121,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
             
             
             self?.currentTableViewCell = cell;
-            
+            cell.setSelected(true, animated: true);
             
             
         }
@@ -117,10 +131,6 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
     
     
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        streamMusic(music: arrayOfMusics[indexPath.row]);
-        
-    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72;
@@ -208,7 +218,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: mplayer.currentItem)
         
         if(!timerRuned){
-            let timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,selector: #selector(MainController.updateSlider), userInfo: nil, repeats: true);
+            _ = Timer.scheduledTimer(timeInterval: 0.1, target: self,selector: #selector(MainController.updateSlider), userInfo: nil, repeats: true);
             timerRuned = true;
         }
         
@@ -232,7 +242,7 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
                 mplayer.pause();
                 isPlaying = false;
                 playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
-            }else{
+            }else if(correntPlayingItem != -1){
                 mplayer.play();
                 isPlaying = true;
                 playButton.setImage(UIImage(named: "pause-circle.png"), for: UIControlState.normal)
@@ -253,8 +263,31 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         if(prev == -1){
             prev = arrayOfMusics.count-1;
         }
+        
+        
+        
+        currentTableViewCell.setSelected(false, animated: true);
+        currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+        currentTableViewCell.isPlaying = false;
+        
         streamMusic(music : arrayOfMusics[prev])
+        
+        let indexPath = IndexPath(row: prev, section: 0)
+        let nextCell = musicTableView.cellForRow(at: indexPath) as! TableViewCell!;
+        
+        /*
+        arrayOfMusics[prev].isSelected = true;
+        arrayOfMusics[correntPlayingItem].isSelected = false;
+        */
+        
+        if(nextCell != nil){
+            nextCell?.setSelected(true, animated: true);
+            nextCell?.playButton.setImage(UIImage(named: "stop-circle.png"), for: UIControlState.normal)
+            nextCell?.isPlaying = true;
+        }
+        
         correntPlayingItem = prev;
+        currentTableViewCell = nextCell
         
     }
     
@@ -273,9 +306,28 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
             }
         }
         
-        streamMusic(music : arrayOfMusics[next])
-        correntPlayingItem = next;
+        currentTableViewCell.setSelected(false, animated: true);
+        currentTableViewCell.playButton.setImage(UIImage(named: "play-circle.png"), for: UIControlState.normal)
+        currentTableViewCell.isPlaying = false;
         
+        streamMusic(music : arrayOfMusics[next])
+        
+        let indexPath = IndexPath(row: next, section: 0)
+        let nextCell = musicTableView.cellForRow(at: indexPath) as! TableViewCell!;
+        
+        /*
+        arrayOfMusics[next].isSelected = true;
+        arrayOfMusics[correntPlayingItem].isSelected = false;
+        */
+        
+        if(nextCell != nil){
+            nextCell?.setSelected(true, animated: true);
+            nextCell?.playButton.setImage(UIImage(named: "stop-circle.png"), for: UIControlState.normal)
+            nextCell?.isPlaying = true;
+        }
+        
+        correntPlayingItem = next;
+        currentTableViewCell = nextCell
         
     }
     
@@ -292,6 +344,6 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
     }
     
-  
+    
     
 }
