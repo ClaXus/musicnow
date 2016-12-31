@@ -49,11 +49,6 @@ class MainController: UIViewController, UITableViewDelegate ,UITableViewDataSour
         
         nameLable.text = "";
         artistLable.text = "";
-        
-        
-        
-        
-        
     }
     
     
